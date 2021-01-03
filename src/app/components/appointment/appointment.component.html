@@ -1,0 +1,71 @@
+<app-header></app-header>
+<div class="slds-col slds-m-around_medium">
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <ngl-icon iconName="standard:event" alternativeText="Event"></ngl-icon>
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <a href="javascript:void(0);" class="slds-card__header-link slds-truncate" title="Accounts">
+                            <span>Appointments</span>
+                        </a>
+                    </h2>
+                </div>
+                <div class="slds-no-flex">
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col">
+                            <a [routerLink]="['/home']" class="slds-button slds-button_neutral">Back to home</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+        </div>
+        <div class="slds-card__body slds-card__body_inner">
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_3-of-12">
+                    <ngl-datepicker-input [(value)]="appointmentTime" (valueChange)="onDateChange()" format="little-endian" [class.slds-has-success]="true" patternPlaceholder>
+                        <input nglDatepickerInput type="text">
+                      </ngl-datepicker-input>
+                </div>
+                <div class="slds-col slds-size_9-of-12">
+                    <div class="slds-card__body slds-card__body_inner">
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col">
+                                <div class="slds-box">
+                                    <h3 class="slds-m-bottom_small">Morning Slots</h3>
+                                        <ngl-pill icon="standard:event" variant="brand" *ngFor="let slot of morningSlots"><button nglPillAction class="slds-button slds-button_neutral" 
+                                            [disabled]="isExist(slot)"  (click)="open(slot)">{{slot}}</button></ngl-pill>
+                                </div>
+                                <div class="slds-box slds-m-top_small">
+                                    <h3 class="slds-m-bottom_small">Evening Slots</h3>
+                                    <ngl-pill icon="standard:date_time" *ngFor="let slot of eveningSlots"><button nglPillAction class="slds-button slds-button_neutral"
+                                        >{{slot}}</button></ngl-pill>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </article>
+    <ngl-modal [header]="'Book an Appointment'" [(open)]="opened">
+        <div class="slds-p-around_medium">
+            <div class="form-element">
+                <ngl-combobox label="Select User" [options]="filteredUsers$ | async" [(open)]="openPic" [(selection)]="user" variant="lookup">
+                    <input nglCombobox type="text" placeholder="Hint: type `man` or `r`" [formControl]="selectedUser">
+                  </ngl-combobox>
+            </div>
+            <div class="form-element">
+                <ngl-input label="Appointment Date and Time">
+                    <input ngl type="input" [disabled]="true" readonly [value]="appointment.appointmentTime">
+                  </ngl-input>
+            </div>
+        </div>
+        <ng-template nglModalFooter>
+          <button class="slds-button slds-button_neutral" (click)="cancel()">Cancel</button>
+          <button class="slds-button slds-button_brand" (click)="bookAppointment()" [disabled]="!user">Save</button>
+        </ng-template>
+      </ngl-modal>
+</div>

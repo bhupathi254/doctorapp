@@ -1,0 +1,94 @@
+<app-header></app-header>
+<div class="slds-grid slds-gutters">
+    <div class="slds-col slds-m-around_medium ">
+        <article class="slds-card">
+            <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__figure">
+                        <ngl-icon iconName="standard:event" alternativeText="Event"></ngl-icon>
+                    </div>
+                    <div class="slds-media__body">
+                        <h2 class="slds-card__header-title">
+                            <a href="javascript:void(0);" class="slds-card__header-link slds-truncate" title="Accounts">
+                                <span>Appointments</span>
+                            </a>
+                        </h2>
+                    </div>
+                    <div class="slds-no-flex">
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col">
+                                <input ngl type="search" [(ngModel)]="pTable.search"
+                                    (keyup)='searchInput.next($event)' placeholder="Search Appointments" />
+                            </div>
+                            <div class="slds-col">
+                                <ngl-datepicker-input [(value)]="appointmentTime" (valueChange)="onDateChange()" format="little-endian" patternPlaceholder>
+                                    <input nglDatepickerInput type="text" readonly>
+                                  </ngl-datepicker-input>
+                            </div>
+                            <div class="slds-col">
+                                <a [routerLink]="['/customer']" class="slds-button slds-button_neutral">Customers</a>
+                                <a [routerLink]="['/appointment']" class="slds-button slds-button_neutral">Appointments</a>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+            </div>
+            <div class="slds-card__body slds-card__body_inner">
+                <table
+                            class="slds-table_bordered slds-no-row-hover slds-max-medium-table_stacked-horizontal slds-table_resizable-cols"
+                            ngl-datatable [data]="pTable.data" [loading]="pTable.isLoading" [(sort)]="pTable.sort"
+                            (sortChange)="onSort($event)">
+                            <ngl-datatable-column heading="Name" key="user.name" truncate="true" sortable>
+                                <ng-template nglDatatableCell let-row="row">
+                                    {{row.user.name}}</ng-template>
+                            </ngl-datatable-column>
+                            <ngl-datatable-column heading="Contact Number" class="slds-cell-wrap"
+                                key="user.mobile" truncate="true" sortable>
+                                <ng-template nglDatatableCell let-row="row">{{row.user.mobile}}</ng-template>
+                            </ngl-datatable-column>
+                            <ngl-datatable-column heading="Gender" key="user.gender" class="slds-cell-wrap"
+                                key="user.gender" truncate="true" sortable>
+                                <ng-template nglDatatableCell let-row="row">{{row.user.gender}}</ng-template>
+                            </ngl-datatable-column>
+                            <ngl-datatable-column heading="Date of Birth" key="user.dob" truncate="true"
+                                sortable>
+                                <ng-template nglDatatableCell let-row="row">{{row.user.dob | date}}</ng-template>
+                            </ngl-datatable-column>
+                            <ngl-datatable-column heading="Date of Appointment" key="appointmentTime" truncate="true"
+                                sortable>
+                                <ng-template nglDatatableCell let-row="row">{{row.appointmentTime | date}}</ng-template>
+                            </ngl-datatable-column>
+                            <ngl-datatable-column heading="Status" key="status" truncate="true"
+                                sortable>
+                                <ng-template nglDatatableCell let-row="row">{{row.status}}</ng-template>
+                            </ngl-datatable-column>
+                            <ngl-datatable-column heading="Actions" key="Assinged Appointments" truncate="true">
+                                <ng-template nglDatatableCell let-row="row">
+                                    <button type="button" nglButtonIcon variant="brand" (click)="updateAppointment(row._id)" *ngIf="row.status==='Pending'" (click)="onEdit(row._id)"
+                                        iconName="standard:task2" title="Update Appointment"></button>
+                                        <span *ngIf="row.status==='Accepted'">Accepted</span>
+                                </ng-template>
+                            </ngl-datatable-column>
+                            <!-- Loading overlay-->
+                            <ng-template nglLoadingOverlay>
+                                <div class="slds-text-align_center"><div class="loader">Loading...</div></div>
+                            </ng-template>
+                            <!-- No rows overlay-->
+                            <ng-template nglNoRowsOverlay>No data available!</ng-template>
+                        </table>
+            </div>
+            <footer class="slds-card__footer">
+                <div class="slds-grid slds-grid_align-spread">
+                    <div class="slds-col">
+                        Showing {{pagination.start}} - {{pagination.end}} of {{pTable.total}}
+                    </div>
+                    <div class="slds-col">
+                        <ngl-pagination [(page)]="pTable.page" (pageChange)="onPageChange()"
+                            [total]="pTable.total" [perPage]="pTable.limit" limit="3" boundaryNumbers="1"
+                            #pagination></ngl-pagination>
+                    </div>
+                </div>
+            </footer>
+        </article>        
+    </div>
+</div>

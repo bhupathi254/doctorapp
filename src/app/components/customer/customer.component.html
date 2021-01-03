@@ -1,0 +1,108 @@
+<app-header></app-header>
+<div class="slds-col slds-m-around_medium">
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <ngl-icon iconName="standard:event" alternativeText="Event"></ngl-icon>
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <a href="javascript:void(0);" class="slds-card__header-link slds-truncate" title="Accounts">
+                            <span>Appointments</span>
+                        </a>
+                    </h2>
+                </div>
+                <div class="slds-no-flex">
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col">
+                            <input ngl type="search" [(ngModel)]="pTable.search"
+                                (keyup)='searchInput.next($event)' placeholder="Search Users" />
+                        </div>
+                        <div class="slds-col">
+                            <button class="slds-button slds-button_neutral" (click)="open()">Create user</button>
+                            <a [routerLink]="['/home']" class="slds-button slds-button_neutral">Back to home</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+        </div>
+        <div class="slds-card__body slds-card__body_inner">
+            <table
+                        class="slds-table_bordered slds-no-row-hover slds-max-medium-table_stacked-horizontal slds-table_resizable-cols"
+                        ngl-datatable [data]="pTable.data" [loading]="pTable.isLoading" [(sort)]="pTable.sort"
+                        (sortChange)="onSort($event)">
+                        <ngl-datatable-column heading="Name" key="Name" truncate="true" sortable>
+                            <ng-template nglDatatableCell let-row="row">
+                                {{row.name}}</ng-template>
+                        </ngl-datatable-column>
+                        <ngl-datatable-column heading="Contact Number" class="slds-cell-wrap"
+                            key="user.mobile" truncate="true" sortable>
+                            <ng-template nglDatatableCell let-row="row">{{row.mobile}}</ng-template>
+                        </ngl-datatable-column>
+                        <ngl-datatable-column heading="Gender" class="slds-cell-wrap"
+                            key="user.gender" truncate="true" sortable>
+                            <ng-template nglDatatableCell let-row="row">{{row.gender}}</ng-template>
+                        </ngl-datatable-column>
+                        <ngl-datatable-column heading="Date of Birth" key="user.dob" truncate="true"
+                            sortable>
+                            <ng-template nglDatatableCell let-row="row">{{row.dob | date}}</ng-template>
+                        </ngl-datatable-column>
+                        <!-- Loading overlay-->
+                        <ng-template nglLoadingOverlay>
+                            <div class="slds-text-align_center"><div class="loader">Loading...</div></div>
+                        </ng-template>
+                        <!-- No rows overlay-->
+                        <ng-template nglNoRowsOverlay>No data available!</ng-template>
+                    </table>
+        </div>
+        <footer class="slds-card__footer">
+            <div class="slds-grid slds-grid_align-spread">
+                <div class="slds-col">
+                    Showing {{pagination.start}} - {{pagination.end}} of {{pTable.total}}
+                </div>
+                <div class="slds-col">
+                    <ngl-pagination [(page)]="pTable.page" (pageChange)="onPageChange()"
+                        [total]="pTable.total" [perPage]="pTable.limit" limit="3" boundaryNumbers="1"
+                        #pagination></ngl-pagination>
+                </div>
+            </div>
+        </footer>
+    </article>
+    <ngl-modal [header]="'Create Customer'" [(open)]="opened">
+        <div class="slds-p-around_medium">
+            <div class="form-element">
+                <ngl-input label="Full Name">
+                    <input ngl type="input" [(ngModel)]="customer.name" [required]="true" placeholder="Customer name">
+                  </ngl-input>
+            </div>
+            <div class="form-element">
+                <ngl-input label="Mobile">
+                    <input ngl type="tel" [required]="true" [(ngModel)]="customer.mobile" placeholder="Mobile">
+                  </ngl-input>
+            </div>
+            <div class="form-element">
+                <div class="slds-col_padded">
+                    <ng-template #lbl><i>Gender</i></ng-template>
+                    <fieldset ngl-radio-group label="Gender" [required]="true">
+                      <ngl-radio-option [label]="'Male'">
+                        <input ngl type="radio" [(ngModel)]="customer.gender" [value]="'male'">
+                      </ngl-radio-option>
+                      <ngl-radio-option [label]="'Female'">
+                        <input ngl type="radio" [(ngModel)]="customer.gender" [value]="'female'">
+                      </ngl-radio-option>
+                    </fieldset>
+                  </div>
+            </div>
+            <div class="form-element">
+                <ngl-datepicker-input [(value)]="customer.dob" format="little-endian" [class.slds-has-success]="true" patternPlaceholder>
+                    <input nglDatepickerInput type="text">
+                  </ngl-datepicker-input>
+            </div>
+        </div>
+        <ng-template nglModalFooter>
+          <button class="slds-button slds-button_neutral" (click)="cancel()">Cancel</button>
+          <button class="slds-button slds-button_brand" (click)="createCustomer()" [disabled]="!isValid(customer)">Save</button>
+        </ng-template>
+      </ngl-modal>
+</div>
